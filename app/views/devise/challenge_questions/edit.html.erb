@@ -3,6 +3,14 @@
 <%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :put }) do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :reset_challenge_questions_token %>
+  
+  <%= f.fields_for :"#{resource_name}_challenge_questions" do |cq| %>
+    <p>
+      <%= cq.select :question, Devise.challenge_questions, :prompt => '-- select --' %>
+      <br />
+      <%= cq.text_field :answer %>
+    </p>
+  <% end %>
 
   <p><%= f.submit "Change my challenge questions" %></p>
 <% end %>

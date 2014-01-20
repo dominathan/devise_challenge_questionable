@@ -3,6 +3,17 @@ module Devise
   module Models
     module ChallengeQuestionable
       extend ActiveSupport::Concern
+      
+      # Update challenge questions saving the record and clearing token. Returns true if
+      # the challenge questions are valid and the record was saved, false otherwise.
+      def reset_challenge_questions!(challenge_questions)
+        debugger
+        p challenge_questions
+        # self.password = new_password
+        # self.password_confirmation = new_password_confirmation
+        # clear_reset_password_token if valid?
+        # save
+      end
 
       def need_challenge_questions?(request)
         true
@@ -61,7 +72,7 @@ module Devise
         # Attributes must contain reset_challenge_questions_token, challenge_question and confirmation
         def reset_challenge_questions_by_token(attributes={})
           challenge_questionable = find_or_initialize_with_error_by(:reset_challenge_questions_token, attributes[:reset_challenge_questions_token])
-          challenge_questionable.reset_challenge_question!(attributes[:challenge_question], attributes[:challenge_questions_confirmation]) if challenge_questionable.persisted?
+          challenge_questionable.reset_challenge_questions!(attributes[:user_challenge_questions_attributes]) if challenge_questionable.persisted?
           challenge_questionable
         end
       end

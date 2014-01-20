@@ -28,11 +28,20 @@ class Devise::ChallengeQuestionsController < ApplicationController
   def edit
     self.resource = resource_class.new
     resource.reset_challenge_questions_token = params[:reset_challenge_questions_token]
+    3.times { resource.send("#{resource_name}_challenge_questions").build }
     render_with_scope :edit
   end
   
+  # PUT /resource/challenge_question
   def update
-    
+    self.resource = resource_class.reset_challenge_questions_by_token(params[resource_name])
+
+    if resource.errors.empty?
+      set_flash_message :notice, :updated
+      sign_in_and_redirect(resource_name, resource)
+    else
+      render_with_scope :edit
+    end
   end
 
   # GET /resource/challenge_question
