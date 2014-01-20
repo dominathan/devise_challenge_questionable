@@ -1,0 +1,4 @@
+en:
+  devise:
+    challenge_questions:
+      attempt_failed: "Attempt failed."
