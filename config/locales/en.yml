@@ -2,3 +2,4 @@ en:
   devise:
     challenge_questions:
       attempt_failed: "Attempt failed."
+      send_instructions: "You will receive an email with instructions about how to reset your challenge questions in a few minutes."

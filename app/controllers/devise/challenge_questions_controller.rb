@@ -1,15 +1,47 @@
 class Devise::ChallengeQuestionsController < ApplicationController
   include Devise::Controllers::InternalHelpers
-  prepend_before_filter :authenticate_scope!
-  before_filter :prepare_and_validate, :handle_challenge_questions
+  prepend_before_filter :require_no_authentication, :only => [:new, :create, :edit, :update]
+  prepend_before_filter :authenticate_scope!, :only => [:show, :authenticate]
+  before_filter :prepare_and_validate, :handle_challenge_questions, :only => [:show, :authenticate] 
   layout 'devise'
+  
+  # GET /resource/challenge_question/new
+  def new
+    build_resource
+    render_with_scope :new
+  end
+  
+  # POST /resource/challenge_question
+  def create
+    self.resource = resource_class.send_reset_challenge_questions_instructions(params[resource_name])
+    
+    if resource.errors.empty?
+      set_flash_message :notice, :send_instructions
+      sign_out(resource)
+      redirect_to new_session_path(resource_name)
+    else
+      render_with_scope :new
+    end
+  end
+  
+  # GET /resource/challenge_question/edit?reset_challenge_questions_token=abcdef
+  def edit
+    self.resource = resource_class.new
+    resource.reset_challenge_questions_token = params[:reset_challenge_questions_token]
+    render_with_scope :edit
+  end
+  
+  def update
+    
+  end
 
+  # GET /resource/challenge_question
   def show
     @challenge_question = resource.send("#{resource_name}_challenge_questions").sample
     render_with_scope :show
   end
 
-  def update
+  def authenticate
     render_with_scope :show and return if params[:answer].nil?
     @challenge_question = resource.send("#{resource_name}_challenge_questions").find(params[:challenge_question_id])
     md5 = Digest::MD5.hexdigest(params[:answer])
@@ -21,7 +53,7 @@ class Devise::ChallengeQuestionsController < ApplicationController
     else
       resource.challenge_question_failed_attempts += 1
       resource.save
-      set_flash_message :error, :attempt_failed
+      set_flash_message :notice, :attempt_failed
       if resource.max_challenge_question_attempts?
         sign_out(resource)
         render_with_scope :max_challenge_question_attempts_reached and return

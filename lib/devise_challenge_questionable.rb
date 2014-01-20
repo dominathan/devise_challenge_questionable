@@ -17,16 +17,18 @@ module Devise
   "What was your high school mascot?"]
 end
 
-module TwoFactorAuthentication
+module DeviseChallengeQuestionable
   autoload :Schema, 'devise_challenge_questionable/schema'
   module Controllers
     autoload :Helpers, 'devise_challenge_questionable/controllers/helpers'
+    autoload :UrlHelpers, 'devise_challenge_questionable/controllers/url_helpers'
   end
 end
 
 Devise.add_module :challenge_questionable, :model => 'devise_challenge_questionable/model', :controller => :challenge_questions, :route => :challenge_question
 
-require 'devise_challenge_questionable/controllers/helpers'
+require 'devise_challenge_questionable/mailer'
 require 'devise_challenge_questionable/routes'
 require 'devise_challenge_questionable/model'
 require 'devise_challenge_questionable/rails'
+

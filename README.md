@@ -48,6 +48,10 @@ Two default parameters
 
 ```ruby
   config.devise.max_challenge_question_attempts = 3
+  
+  config.devise.challenge_questions = ["What is your mother’s middle name?",
+  "What are the month / day of your employment?", "What is the make/model of first car?", 
+  "What is the name of the city or town where you were born?", "What is the name of your favorite childhood teacher?", "What is the name of your first pet?", "What is the name of your favorite childhood friend?", "What are your oldest sibling’s month and year of birth?", "What is your oldest sibling’s middle name?", "What school did you attend for sixth grade?", "On what street did you live in third grade?", "What was your high school mascot?"]
 ```
 
 ### Customization

@@ -1,6 +1,6 @@
 <h3>Answer the challenge question below</h3>
 
-<%= form_tag([resource_name, :challenge_question], :method => :put) do %>
+<%= form_tag([:authenticate, resource_name, :challenge_question], :method => :put) do %>
   <p>
     <%= hidden_field_tag :challenge_question_id, @challenge_question.id%>
     <%= label_tag :question, @challenge_question.question %>

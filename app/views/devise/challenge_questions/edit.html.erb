@@ -1,0 +1,8 @@
+<h2>Change your challenge questions</h2>
+
+<%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :put }) do |f| %>
+  <%= devise_error_messages! %>
+  <%= f.hidden_field :reset_challenge_questions_token %>
+
+  <p><%= f.submit "Change my challenge questions" %></p>
+<% end %>
