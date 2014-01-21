@@ -3,9 +3,9 @@
 <%= form_tag([:authenticate, resource_name, :challenge_question], :method => :put) do %>
   <p>
     <%= hidden_field_tag :challenge_question_id, @challenge_question.id%>
-    <%= label_tag :question, @challenge_question.question %>
+    <%= label_tag :challege_question, @challenge_question.challenge_question %>
     <br>
-    <%= text_field_tag :answer, nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => 'true', :autocomplete => "off" %>
+    <%= text_field_tag :challenge_answer, nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => 'true', :autocomplete => "off" %>
   </p>
   <p>
     <%= submit_tag "Submit", :style => 'margin-left: 40%;font-size:1.8em;' %>

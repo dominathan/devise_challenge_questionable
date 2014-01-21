@@ -11,5 +11,11 @@ module DeviseChallengeQuestionable
       require 'devise/mailer'
       Devise::Mailer.send :include, DeviseChallengeQuestionable::Mailer
     end
+    
+    
+    initializer "devise.add_filters" do |app|
+      app.config.filter_parameters += [:challenge_answer]
+      app.config.filter_parameters.uniq
+    end
   end
 end

@@ -6,13 +6,14 @@ module Devise
       
       # Update challenge questions saving the record and clearing token. Returns true if
       # the challenge questions are valid and the record was saved, false otherwise.
-      def reset_challenge_questions!(challenge_questions)
-        debugger
-        p challenge_questions
-        # self.password = new_password
-        # self.password_confirmation = new_password_confirmation
-        # clear_reset_password_token if valid?
-        # save
+      def reset_challenge_questions!(attributes)
+        self.send("#{self.class.name.underscore}_challenge_questions").destroy_all
+        self.attributes = {"#{self.class.name.underscore}_challenge_questions_attributes" => attributes["#{self.class.name.underscore}_challenge_questions_attributes"]}
+        if self.valid?
+          clear_reset_challenge_questions_token 
+          # clear_challenge_question_failed_attempts
+        end
+        self.save
       end
 
       def need_challenge_questions?(request)
@@ -47,6 +48,10 @@ module Devise
           self.reset_challenge_questions_token = nil
         end
         
+        def clear_challenge_question_failed_attempts
+          self.challenge_question_failed_attempts = 0
+        end
+        
       module ClassMethods
         ::Devise::Models.config(self, :max_challenge_question_attempts)
         
@@ -72,7 +77,7 @@ module Devise
         # Attributes must contain reset_challenge_questions_token, challenge_question and confirmation
         def reset_challenge_questions_by_token(attributes={})
           challenge_questionable = find_or_initialize_with_error_by(:reset_challenge_questions_token, attributes[:reset_challenge_questions_token])
-          challenge_questionable.reset_challenge_questions!(attributes[:user_challenge_questions_attributes]) if challenge_questionable.persisted?
+          challenge_questionable.reset_challenge_questions!(attributes) if challenge_questionable.persisted?
           challenge_questionable
         end
       end

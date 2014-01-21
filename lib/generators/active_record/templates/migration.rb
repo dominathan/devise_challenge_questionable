@@ -5,8 +5,8 @@ class DeviseChallengeQuestionableAddTo<%= table_name.camelize %> < ActiveRecord:
     
     create_table :<%= class_name.underscore %>_challenge_questions do |t|
       t.integer :<%= table_name.singularize %>_id
-      t.string  :question
-      t.string  :answer
+      t.string  :challenge_question
+      t.string  :challenge_answer
       t.timestamps
     end
     
