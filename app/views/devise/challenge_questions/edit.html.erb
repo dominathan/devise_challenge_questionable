@@ -13,7 +13,7 @@
         <p>
           Question: <%= cq.select :challenge_question, Devise.challenge_questions, :prompt => 'Please select a question' %>
           <br />
-          Answer:&nbsp;&nbsp;&nbsp; <%= cq.text_field :challenge_answer, :placeholder => "Type your answer here" %>
+          Answer:&nbsp;&nbsp;&nbsp; <%= cq.text_field :challenge_answer, :placeholder => "Type your answer here", :autocomplete => "off" %>
           <hr>
         </p>
       <% end %>
@@ -25,18 +25,18 @@
 </fieldset>
 
 <%- content_for :sidebar do %>
-<div>
-  <h3>Tips for Creating Security Questions</h3>
-  <ul>
-    <li>1. Please choose questions with clear answers that you can remember easily.</li>
-    <li>2. All questions must be answered.</li>
-    <li>3. You cannot use the same answer for more than 1 question.</li>
-    <li>4. Answers must have between 3 and 56 characters.</li>
-    <li>5. Answers cannot have more than 2 repeating characters in a row.</li>
-    <li>6. Special characters, such as & and () are not allowed.</li>
-    <li>7. Answers are not case sensitive.</li>
-  </ul>
-</div>
+  <div>
+    <h3>Tips for Creating Security Questions</h3>
+    <ul>
+      <li>1. Please choose questions with clear answers that you can remember easily.</li>
+      <li>2. All questions must be answered.</li>
+      <li>3. You cannot use the same answer for more than 1 question.</li>
+      <li>4. Answers must have between 3 and 56 characters.</li>
+      <li>5. Answers cannot have more than 2 repeating characters in a row.</li>
+      <li>6. Special characters, such as & and () are not allowed.</li>
+      <li>7. Answers are not case sensitive.</li>
+    </ul>
+  </div>
 <% end %>
 
 <script type="text/javascript" language="javascript">
