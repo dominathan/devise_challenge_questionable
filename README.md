@@ -50,7 +50,7 @@ To manually enable challenge questions for the {Resource} model, you should add 
   attr_accessible :{resource}_challenge_questions_attributes
 ```
 
-#### You also need to add the {resource}_challenge_question.rb Model.
+ You also need to add the [resource]_challenge_question.rb Model.
 
 ```ruby
   class {Resource}ChallengeQuestion < ActiveRecord::Base
