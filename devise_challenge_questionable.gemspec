@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'rails', '>= 3.0.20'
   s.add_runtime_dependency 'devise'
-  s.add_runtime_dependency 'randexp'
 
   s.add_development_dependency 'bundler'
 end
