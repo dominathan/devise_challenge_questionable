@@ -1,6 +1,6 @@
 ## Challenge questions plugin for Devise
 
-This plugin forces a two step login process.  After entering {resource}name and password, you must then answer a challenge question.  Unlike security questions which are typically used when doing things like changing passwords, the challenge question must be answered each time logging in.  You can set which {resource}s need to answer a challenge question
+This plugin forces a two step login process.  After entering username and password, you must then answer a challenge question.  Unlike security questions which are typically used when doing things like changing passwords, the challenge question must be answered each time logging in.  You can set which users(or preferred resource) need to answer a challenge question
 ## Features
 
 * configure max challenge question attempts
@@ -39,7 +39,7 @@ Finally, run the migration with:
 
 ### Manual installation
 
-To manually enable challenge questions for the {Resource} model, you should add the following. Set up relationships. You should already have a devise line so you would just add :challenge_questionable to it.  Also, you need to allow accessibility to :{resource}_challenge_questions_attributes.  Replace {resource} with whatver resource you are using. Typically it would be {resource} or admin.
+To manually enable challenge questions for the {Resource} model, you should add the following. Set up relationships. You should already have a devise line so you would just add :challenge_questionable to it.  Also, you need to allow accessibility to `:{resource}_challenge_questions_attributes`.  Replace {resource} with whatever resource you are using. Typically it would be {resource} or admin.
 
 ```ruby
   has_many :{resource}_challenge_questions, :validate => true, :inverse_of => :{resource}
@@ -50,7 +50,7 @@ To manually enable challenge questions for the {Resource} model, you should add 
   attr_accessible :{resource}_challenge_questions_attributes
 ```
 
- You also need to add the [resource]_challenge_question.rb Model.
+You also need to add the `{resource}_challenge_question.rb` Model.
 
 ```ruby
   class {Resource}ChallengeQuestion < ActiveRecord::Base
