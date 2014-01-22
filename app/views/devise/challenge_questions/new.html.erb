@@ -1,10 +1,12 @@
-<h2>Forgot your challenge questions?</h2>
+<h3>Forgot your challenge questions?</h3>
 
 <%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :post }) do |f| %>
-  <%= devise_error_messages! %>
+  <fieldset>
+    <%= devise_error_messages! %>
 
-  <p><%= f.label :email %><br />
-  <%= f.text_field :email %></p>
+    <p><%= f.label :email %><br />
+    <%= f.text_field :email, :autocomplete => "off", :placeholder => "example@email.com" %></p>
 
-  <p><%= f.submit "Send me reset challenge question instructions" %></p>
+    <p><%= f.submit "Send me reset challenge question instructions" %></p>
+  </fieldset>
 <% end %>

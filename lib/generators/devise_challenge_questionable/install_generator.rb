@@ -18,6 +18,9 @@ module DeviseChallengeQuestionable
   # Max challenge question attempts
   config.max_challenge_question_attempts = 3
   
+  # Number of challenge questions to store for each user
+  config.number_of_challenge_questions = 3
+  
   # Default challenge question options
   config.challenge_questions = ["What is your mother’s middle name?",
   "What are the month / day of your employment?", "What is the make/model of first car?", 
@@ -31,10 +34,6 @@ CONTENT
             end
           end
         end
-      end
-      
-      def copy_locale
-        copy_file "../../../config/locales/en.yml", "config/locales/devise_challenge_questionable.en.yml"
       end
       
     end

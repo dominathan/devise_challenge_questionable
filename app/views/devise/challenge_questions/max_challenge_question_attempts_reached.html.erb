@@ -1,5 +1,11 @@
-<h2>Access completely denied as you have reached your attempts limit = <%= @limit %>.</h2>
-<p>Please contact your system administrator.</p>
+<h3>Please contact your system administrator.</h3>
 
-<%= link_to "Forgot your challenge questions?", new_challenge_question_path(resource_name) %>
+<fieldset>
+  <p>
+    Access denied as you have reached your max challenge question attempts.
+  </p>
+  <p>
+    <%= link_to "Reset your challenge questions?", new_challenge_question_path(resource_name) %>
+  </p>
+</fieldset>
 

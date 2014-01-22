@@ -1,23 +1,43 @@
-<h2>Change your challenge questions</h2>
+<h3>Change Your Challenge Questions</h3>
+<p>Change your current challenge questions by filling out the form below. The questions you set up previously will be replaced with these new questions. All fields are required.</p>
 
-<%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_challenge_questions_token %>
+<fieldset>
+  <h4>Please select <%= Devise.number_of_challenge_questions %> questions below, 1 from each drop down. Then type your answers in the field provided.</h4>
+  <%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :put }) do |f| %>
+    <%= devise_error_messages! %>
+    <%= f.hidden_field :id %>
+    <%= f.hidden_field :reset_challenge_questions_token %>
   
-  <%= f.fields_for :"#{resource_name}_challenge_questions", resource.send("#{resource_name}_challenge_questions") do |cq| %>
-    <% if cq.object.new_record? %>
-      <p>
-        <%= cq.select :challenge_question, Devise.challenge_questions, :prompt => '-- select --' %>
-        <br />
-        <%= cq.text_field :challenge_answer %>
-      </p>
+    <%= f.fields_for :"#{resource_name}_challenge_questions", resource.send("#{resource_name}_challenge_questions") do |cq| %>
+      <% if cq.object.new_record? %>
+        <p>
+          Question: <%= cq.select :challenge_question, Devise.challenge_questions, :prompt => 'Please select a question' %>
+          <br />
+          Answer:&nbsp;&nbsp;&nbsp; <%= cq.text_field :challenge_answer, :placeholder => "Type your answer here" %>
+          <hr>
+        </p>
+      <% end %>
     <% end %>
+    <p>Remember, your current Challenge Questions will be overwritten.</p>
+    <p><%= f.submit "Change my challenge questions" %></p>
+    <p><%= link_to :cancel, :back%>
   <% end %>
+</fieldset>
 
-  <p><%= f.submit "Change my challenge questions" %></p>
+<%- content_for :sidebar do %>
+<div>
+  <h3>Tips for Creating Security Questions</h3>
+  <ul>
+    <li>1. Please choose questions with clear answers that you can remember easily.</li>
+    <li>2. All questions must be answered.</li>
+    <li>3. You cannot use the same answer for more than 1 question.</li>
+    <li>4. Answers must have between 3 and 56 characters.</li>
+    <li>5. Answers cannot have more than 2 repeating characters in a row.</li>
+    <li>6. Special characters, such as & and () are not allowed.</li>
+    <li>7. Answers are not case sensitive.</li>
+  </ul>
+</div>
 <% end %>
-
-<%= link_to "Resend me reset challenge question instructions", new_challenge_question_path(resource_name) %>
 
 <script type="text/javascript" language="javascript">
   $("select").each(function () {

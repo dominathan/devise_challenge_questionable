@@ -8,16 +8,17 @@ module Devise
       # the challenge questions are valid and the record was saved, false otherwise.
       def reset_challenge_questions!(attributes)
         self.send("#{self.class.name.underscore}_challenge_questions").destroy_all
-        self.attributes = {"#{self.class.name.underscore}_challenge_questions_attributes" => attributes["#{self.class.name.underscore}_challenge_questions_attributes"]}
-        if self.valid?
-          clear_reset_challenge_questions_token 
-          # clear_challenge_question_failed_attempts
-        end
+        self.attributes = {"#{self.class.name.underscore}_challenge_questions_attributes" => attributes["#{self.class.name.underscore}_challenge_questions_attributes"]}       
+        clear_reset_challenge_questions_token if self.valid?
         self.save
       end
 
       def need_challenge_questions?(request)
         true
+      end
+      
+      def max_challenge_question_lock_account
+        self.lock_access! if self.class.lock_strategy_enabled?(:failed_attempts)
       end
 
       def max_challenge_question_attempts?
@@ -28,6 +29,21 @@ module Devise
       def send_reset_challenge_questions_instructions
         generate_reset_challenge_questions_token!
         ::Devise.mailer.reset_challenge_questions_instructions(self).deliver
+      end
+      
+      # Generates a new random token for reset challenge_question
+      def set_reset_challenge_questions_token
+        generate_reset_challenge_questions_token!
+      end
+      
+      def unlock_access_including_challenge_questions!
+        if_access_locked do
+          self.locked_at = nil
+          self.failed_attempts = 0 if respond_to?(:failed_attempts=)
+          self.challenge_question_failed_attempts = 0 if respond_to?(:challenge_question_failed_attempts=)
+          self.unlock_token = nil  if respond_to?(:unlock_token=)
+          save(:validate => false)
+        end
       end
       
       protected

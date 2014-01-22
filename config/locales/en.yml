@@ -3,4 +3,4 @@ en:
     challenge_questions:
       attempt_failed: "Attempt failed."
       updated_challenge_questions: "Successfully updated challenge questions."
-      send_instructions: "You will receive an email with instructions about how to reset your challenge questions in a few minutes."
+      send_instructions: "You will receive an email with instructions about how to reset your challenge questions in a few minutes." 

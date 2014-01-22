@@ -15,6 +15,9 @@ module Devise
   "What are your oldest sibling’s month and year of birth?", "What is your oldest sibling’s middle name?", 
   "What school did you attend for sixth grade?", "On what street did you live in third grade?", 
   "What was your high school mascot?"]
+  
+  mattr_accessor :number_of_challenge_questions
+  @@number_of_challenge_questions = 3
 end
 
 module DeviseChallengeQuestionable
