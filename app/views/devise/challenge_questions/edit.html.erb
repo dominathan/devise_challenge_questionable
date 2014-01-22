@@ -11,7 +11,7 @@
     <%= f.fields_for :"#{resource_name}_challenge_questions", resource.send("#{resource_name}_challenge_questions") do |cq| %>
       <% if cq.object.new_record? %>
         <p>
-          Question: <%= cq.select :challenge_question, Devise.challenge_questions, :prompt => 'Please select a question' %>
+          Question: <%= cq.select :challenge_question, Devise.challenge_questions.shuffle, :prompt => 'Please select a question' %>
           <br />
           Answer:&nbsp;&nbsp;&nbsp; <%= cq.text_field :challenge_answer, :placeholder => "Type your answer here", :autocomplete => "off" %>
           <hr>
