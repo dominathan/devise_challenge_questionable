@@ -46,7 +46,7 @@ To manually enable challenge questions for the User model, you should add challe
          :recoverable, :rememberable, :trackable, :validatable, :challenge_questionable
 ```
 
-Two default parameters
+Three default parameters
 
 ```ruby
   # ==> Configuration for :challenge_questionable
