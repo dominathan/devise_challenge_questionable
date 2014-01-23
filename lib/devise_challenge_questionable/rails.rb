@@ -14,7 +14,7 @@ module DeviseChallengeQuestionable
     
     
     initializer "devise.add_filters" do |app|
-      app.config.filter_parameters += [:challenge_answer]
+      app.config.filter_parameters += [:challenge_answer, :reset_challenge_questions_token]
       app.config.filter_parameters.uniq
     end
   end

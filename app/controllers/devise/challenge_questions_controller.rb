@@ -1,6 +1,7 @@
 class Devise::ChallengeQuestionsController < ApplicationController
   include Devise::Controllers::InternalHelpers
-  prepend_before_filter :authenticate_scope!, :only => [:show, :authenticate, :manage]
+  prepend_before_filter :require_no_authentication, :only => [ :new, :create, :edit, :update ]
+  prepend_before_filter :authenticate_scope!, :only => [:show, :authenticate, :manage, :reset]
   before_filter :prepare_and_validate, :handle_challenge_questions, :only => [:show, :authenticate] 
   
   # GET /resource/challenge_question/new
@@ -15,7 +16,6 @@ class Devise::ChallengeQuestionsController < ApplicationController
     
     if resource.errors.empty?
       set_flash_message :notice, :send_instructions
-      sign_out(resource)
       redirect_to new_session_path(resource_name)
     else
       render_with_scope :new
@@ -46,6 +46,7 @@ class Devise::ChallengeQuestionsController < ApplicationController
   def show
     @challenge_question = resource.send("#{resource_name}_challenge_questions").sample
     if @challenge_question.nil?
+      sign_out(resource)
       resource.set_reset_challenge_questions_token
       redirect_to edit_challenge_question_path(resource, :reset_challenge_questions_token => resource.reset_challenge_questions_token) 
     else
@@ -79,7 +80,13 @@ class Devise::ChallengeQuestionsController < ApplicationController
   # Build token and redirect
   def manage
     resource.set_reset_challenge_questions_token
+    sign_out(resource)
     redirect_to edit_challenge_question_path(resource, :reset_challenge_questions_token => resource.reset_challenge_questions_token) 
+  end
+  
+  def forgot
+    sign_out(resource)
+    redirect_to new_challenge_question_path(resource_name) 
   end
 
   private

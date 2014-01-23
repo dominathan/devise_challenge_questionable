@@ -9,12 +9,12 @@
       <%= password_field_tag :challenge_answer, nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => 'true', :autocomplete => "off" %>
     </p>
     <p>
-      <%= submit_tag "Submit", :style => 'margin-left: 40%;font-size:1.8em;' %>
+      <%= submit_tag "Submit", :style => 'font-size:1.8em;'%>
+      or
+      <%= link_to "Cancel", destroy_user_session_path %>
     </p>
     <p>
-      <%= link_to "Log out", destroy_user_session_path %>
-      <br />
-      <%= link_to "Forgot your challenge questions?", new_challenge_question_path(resource_name) %>
+      <%= link_to "Forgot your challenge questions?", forgot_challenge_question_path(resource_name) %>
     </p>
   </fieldset>
 <% end %>

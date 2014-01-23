@@ -10,7 +10,7 @@ module DeviseChallengeQuestionable
       private
 
       def handle_challenge_questions
-        unless devise_controller?
+        unless devise_controller? && (controller_name != 'registrations' && ![:edit, :update, :destroy].include?(action_name))
           Devise.mappings.keys.flatten.any? do |scope|
             if signed_in?(scope) and warden.session(scope)[:need_challenge_questions]
               failed_challenge_question(scope)
@@ -21,7 +21,7 @@ module DeviseChallengeQuestionable
 
       def failed_challenge_question(scope)
         if request.format.present? and request.format.html?
-          session["#{scope}_return_tor"] = request.path if request.get?
+          session["#{scope}_return_to"] = request.path if request.get?
           redirect_to challenge_questions_path_for(scope)
         else
           render :nothing => true, :status => :unauthorized
