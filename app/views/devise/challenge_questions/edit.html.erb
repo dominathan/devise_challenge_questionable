@@ -2,7 +2,7 @@
 <p>Change your current challenge questions by filling out the form below. The questions you set up previously will be replaced with these new questions. All fields are required.</p>
 
 <fieldset>
-  <h4>Please select <%= Devise.number_of_challenge_questions %> questions below, 1 from each drop down. Then type your answers in the field provided.</h4>
+  <h4>Please select <%= Devise.number_of_challenge_questions_stored %> questions below, 1 from each drop down. Then type your answers in the field provided.</h4>
   <%= form_for(resource, :as => resource_name, :url => challenge_question_path(resource_name), :html => { :method => :put }) do |f| %>
     <%= devise_error_messages! %>
     <%= f.hidden_field :id %>

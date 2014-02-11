@@ -12,11 +12,20 @@ module DeviseChallengeQuestionable
       def handle_challenge_questions
         unless devise_controller? && (controller_name != 'registrations' && ![:edit, :update, :destroy].include?(action_name))
           Devise.mappings.keys.flatten.any? do |scope|
-            if signed_in?(scope) and warden.session(scope)[:need_challenge_questions]
-              failed_challenge_question(scope)
+            if signed_in?(scope)
+              set_challenge_questions(scope) and return if warden.session(scope)[:set_challenge_questions]
+              failed_challenge_question(scope) and return if warden.session(scope)[:login_challenge_questions]
             end
           end
         end
+      end
+      
+      def set_challenge_questions(scope)
+        if request.format.present? and request.format.html?
+          redirect_to set_challenge_questions_path_for(scope)
+        else
+          render :nothing => true, :status => :unauthorized
+        end        
       end
 
       def failed_challenge_question(scope)
@@ -26,6 +35,12 @@ module DeviseChallengeQuestionable
         else
           render :nothing => true, :status => :unauthorized
         end
+      end
+      
+      def set_challenge_questions_path_for(resource_or_scope = nil)
+        scope = Devise::Mapping.find_scope!(resource_or_scope)
+        change_path = "manage_#{scope}_challenge_question_path"
+        send(change_path)        
       end
 
       def challenge_questions_path_for(resource_or_scope = nil)

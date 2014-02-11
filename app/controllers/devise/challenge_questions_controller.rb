@@ -2,7 +2,7 @@ class Devise::ChallengeQuestionsController < ApplicationController
   include Devise::Controllers::InternalHelpers
   prepend_before_filter :require_no_authentication, :only => [ :new, :create, :edit, :update ]
   prepend_before_filter :authenticate_scope!, :only => [:show, :authenticate, :manage, :forgot]
-  before_filter :prepare_and_validate, :handle_challenge_questions, :only => [:show, :authenticate] 
+  before_filter :prepare_and_validate, :handle_challenge_questions, :only => [:show, :authenticate]
   
   # GET /resource/challenge_question/new
   def new
@@ -26,7 +26,7 @@ class Devise::ChallengeQuestionsController < ApplicationController
   def edit
     self.resource = resource_class.new
     resource.reset_challenge_questions_token = params[:reset_challenge_questions_token]
-    Devise.number_of_challenge_questions.times { resource.send("#{resource_name}_challenge_questions").build }
+    Devise.number_of_challenge_questions_stored.times { resource.send("#{resource_name}_challenge_questions").build }
     render_with_scope :edit
   end
   
@@ -44,23 +44,17 @@ class Devise::ChallengeQuestionsController < ApplicationController
 
   # GET /resource/challenge_question
   def show
-    @challenge_question = resource.send("#{resource_name}_challenge_questions").sample
-    if @challenge_question.nil?
-      resource.set_reset_challenge_questions_token
-      sign_out(resource)
-      redirect_to edit_challenge_question_path(resource, :reset_challenge_questions_token => resource.reset_challenge_questions_token) 
-    else
-      render_with_scope :show
+    @challenge_questions = resource.send("#{resource_name}_challenge_questions").sample(params[:limit].try(:to_i) || Devise.number_of_challenge_questions_asked)
+    respond_to do |format|
+      format.html { render_with_scope :show }
+      format.json { render :json => { :challenge_questions => @challenge_questions }}
     end
   end
 
   def authenticate
-    render_with_scope :show and return if params[:challenge_answer].nil?
-    @challenge_question = resource.send("#{resource_name}_challenge_questions").find(params[:challenge_question_id])
-    md5 = Digest::MD5.hexdigest(params[:challenge_answer].downcase)
-    if md5.eql?(@challenge_question.challenge_answer)
-      warden.session(resource_name)[:need_challenge_questions] = false
-      sign_in resource_name, resource
+    if challenge_questions_authenticated?
+      warden.session(resource_name)[:login_challenge_questions] = false
+      # sign_in resource_name, resource
       redirect_to stored_location_for(resource_name) || :root
       resource.update_attribute(:challenge_question_failed_attempts, 0)
     else
@@ -72,9 +66,13 @@ class Devise::ChallengeQuestionsController < ApplicationController
         sign_out(resource)
         render_with_scope :max_challenge_question_attempts_reached and return
       else
-        redirect_to send("#{resource_name}_challenge_question_path")
+        redirect_to send("#{resource_name}_challenge_question_path", :limit => params[:limit])
       end
     end
+  end
+  
+  def login_authenticate
+    ## need to authenticate via json for non login areas
   end
   
   # Build token and redirect
@@ -102,5 +100,11 @@ class Devise::ChallengeQuestionsController < ApplicationController
         sign_out(resource)
         render_with_scope :max_challenge_question_attempts_reached and return
       end
+    end
+    
+    def challenge_questions_authenticated?
+      challenge_questions = params[:challenge_questions] || []
+      @challenge_questions = challenge_questions.map{|cq, params| params.merge(:answer => resource.send("#{resource_name}_challenge_questions").find(params[:challenge_question_id]).challenge_answer)}
+      @challenge_questions.all?{|question| Digest::MD5.hexdigest(question[:challenge_answer].downcase).eql?(question[:answer])}
     end
 end

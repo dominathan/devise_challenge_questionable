@@ -29,7 +29,7 @@ CONTENT
   belongs_to :#{class_name.underscore}
 
   validates :challenge_question, :challenge_answer, :presence => true
-  validates :challenge_answer, :length => { :in => 3..56 }, :format => {:with => /^[\\w\\s:]*$/, :message => "can not contain special characters"}, :allow_blank => true
+  validates :challenge_answer, :length => { :in => 3..56 }, :format => {:with => /^[\\w\\s:\/]*$/, :message => "can not contain special characters"}, :allow_blank => true
 
   # Must use custom validation since uniqueness scope will not work with has_many association
   validate :challenge_question_uniqueness

@@ -13,7 +13,11 @@ module Devise
         self.save
       end
 
-      def need_challenge_questions?(request)
+      def login_challenge_questions?(request)
+        true
+      end
+      
+      def set_challenge_questions?(request)
         true
       end
       
