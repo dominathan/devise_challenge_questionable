@@ -5,7 +5,7 @@
     <%= hidden_field_tag :limit, params[:limit]%>
     <%- @challenge_questions.each_with_index do |cq, index| %>
       <p>
-        <%= hidden_field_tag "challenge_questions[#{cq.id}][challenge_question_id]", cq.id%>
+        <%= hidden_field_tag "challenge_questions[#{cq.id}][id]", cq.id%>
         <%= label_tag "challenge_questions[#{cq.id}][challenge_question]", cq.challenge_question %>
         <br>
         <%= password_field_tag "challenge_questions[#{cq.id}][challenge_answer]", nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => (true if index == 0), :autocomplete => "off" %>

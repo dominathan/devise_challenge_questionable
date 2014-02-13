@@ -47,11 +47,12 @@ class Devise::ChallengeQuestionsController < ApplicationController
     @challenge_questions = resource.send("#{resource_name}_challenge_questions").sample(params[:limit].try(:to_i) || Devise.number_of_challenge_questions_asked)
     respond_to do |format|
       format.html { render_with_scope :show }
-      format.json { render :json => { :challenge_questions => @challenge_questions }}
+      format.json { render :json => @challenge_questions.as_json(:only => [:id, :challenge_question]) }
     end
   end
 
-  def authenticate
+  def authenticate_login
+    @challenge_questions = (params[:challenge_questions] || []).map{|cq, params| params.merge(:answer => resource.send("#{resource_name}_challenge_questions").find(params[:id]).challenge_answer)}
     if challenge_questions_authenticated?
       warden.session(resource_name)[:login_challenge_questions] = false
       # sign_in resource_name, resource
@@ -71,8 +72,21 @@ class Devise::ChallengeQuestionsController < ApplicationController
     end
   end
   
-  def login_authenticate
-    ## need to authenticate via json for non login areas
+  def authenticate
+    @challenge_questions = (params[:challenge_questions] || []).map{|cq| cq.merge(:answer => resource.send("#{resource_name}_challenge_questions").find(cq[:id]).challenge_answer)}
+    if challenge_questions_authenticated? 
+      render :json => {:success => true}
+    else
+      resource.challenge_question_failed_attempts += 1
+      resource.save
+      if resource.max_challenge_question_attempts?
+        resource.max_challenge_question_lock_account
+        sign_out(resource)
+        render_with_scope :max_challenge_question_attempts_reached and return
+      else
+        render :json => {:success => false}
+      end
+    end 
   end
   
   # Build token and redirect
@@ -103,8 +117,6 @@ class Devise::ChallengeQuestionsController < ApplicationController
     end
     
     def challenge_questions_authenticated?
-      challenge_questions = params[:challenge_questions] || []
-      @challenge_questions = challenge_questions.map{|cq, params| params.merge(:answer => resource.send("#{resource_name}_challenge_questions").find(params[:challenge_question_id]).challenge_answer)}
       @challenge_questions.all?{|question| Digest::MD5.hexdigest(question[:challenge_answer].downcase).eql?(question[:answer])}
     end
 end
