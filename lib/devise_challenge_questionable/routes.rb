@@ -7,6 +7,7 @@ module ActionDispatch::Routing
           put :authenticate, :path => mapping.path_names[:authenticate]
           get :manage, :path => mapping.path_names[:manage]
           get :forgot, :path => mapping.path_names[:forgot]
+          get :max_challenge_question_attempts_reached, :path => mapping.path_names[:max_challenge_question_attempts_reached]
         end
       end
   end
