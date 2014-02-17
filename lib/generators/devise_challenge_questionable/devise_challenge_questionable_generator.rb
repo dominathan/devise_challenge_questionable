@@ -79,7 +79,8 @@ CONTENT
         inject_into_file path, :after => "devise:\n" do
 <<-CONTENT
     challenge_questions:
-      attempt_failed: "Attempt failed."
+      attempt_failed: "Attempt failed. Please try again."
+      max_attempts_reached: "You have reached the maximum attempts."
       updated_challenge_questions: "Successfully updated challenge questions."
       send_instructions: "You will receive an email with instructions about how to reset your challenge questions in a few minutes."
 CONTENT
