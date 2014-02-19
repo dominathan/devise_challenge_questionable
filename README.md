@@ -1,11 +1,12 @@
 ## Challenge questions plugin for Devise
 
-This plugin forces a two step login process.  After entering username and password, you must then answer a challenge question.  Unlike security questions which are typically used when doing things like changing passwords, the challenge question must be answered each time logging in.  You can set which users(or preferred resource) need to answer a challenge question
+This plugin forces a two step login process.  After entering username/email and password, you must then answer a challenge question.  Unlike security questions which are typically used when doing things like changing passwords, the challenge question must be answered each time logging in.  You can set which users or admins need to answer a challenge question.  We will assume your resource is User for the remainder of the Readme.
 ## Features
 
 * configure max challenge question attempts
-* configure number of challenge questions stored for each {resource}
-* per {resource} level control if he really need challenge question authentication
+* configure number of challenge questions stored for each user
+* configure number of challenge questions asked for each user
+* per user level control if he really need challenge question authentication
 
 ## Configuration
 
@@ -28,7 +29,7 @@ In order to add challenge questions to a model, run the command:
     
     bundle exec rails g devise_challenge_questionable:install
     
-    bundle exec rails g devise_challenge_questionable:views {resource}s
+    bundle exec rails g devise_challenge_questionable:views users
 
 Where MODEL is your model name (e.g. User or Admin). This generator will add `:challenge_questionable` to your model
 and create a migration in `db/migrate/`, which will add `:reset_challenge_questions_token` and `:challenge_question_failed_attempts` to your table.
@@ -39,22 +40,22 @@ Finally, run the migration with:
 
 ### Manual installation
 
-To manually enable challenge questions for the {Resource} model, you should add the following. Set up relationships. You should already have a devise line so you would just add :challenge_questionable to it.  Also, you need to allow accessibility to `:{resource}_challenge_questions_attributes`.  Replace {resource} with whatever resource you are using. Typically it would be {resource} or admin.
+To manually enable challenge questions for the User model, you should add the following. Set up relationships. You should already have a devise line so you would just add :challenge_questionable to it.  Also, you need to allow accessibility to `:user_challenge_questions_attributes`.  Replace user with whatever resource you are using. Typically it would be user or admin.
 
 ```ruby
-  has_many :{resource}_challenge_questions, :validate => true, :inverse_of => :{resource}
-  accepts_nested_attributes_for :{resource}_challenge_questions, :allow_destroy => true
+  has_many :user_challenge_questions, :validate => true, :inverse_of => :user
+  accepts_nested_attributes_for :user_challenge_questions, :allow_destroy => true
   
   devise :challenge_questionable
   
-  attr_accessible :{resource}_challenge_questions_attributes
+  attr_accessible :user_challenge_questions_attributes
 ```
 
-You also need to add the `{resource}_challenge_question.rb` Model.
+You also need to add the `user_challenge_question.rb` Model.
 
 ```ruby
-  class {Resource}ChallengeQuestion < ActiveRecord::Base
-    belongs_to :{resource}
+  class UserChallengeQuestion < ActiveRecord::Base
+    belongs_to :user
 
     validates :challenge_question, :challenge_answer, :presence => true
     validates :challenge_answer, :length => { :in => 4..56 }, :format => {:with => /^[\w\s:]*$/, :message => "can not contain special characters"}, :allow_blank => true
@@ -72,13 +73,13 @@ You also need to add the `{resource}_challenge_question.rb` Model.
   
     private
     def challenge_question_uniqueness
-      if self.challenge_question.present? && self.{resource}.{resource}_challenge_questions.select{|q| q.challenge_question == self.challenge_question}.count > 1
+      if self.challenge_question.present? && self.user.user_challenge_questions.select{|q| q.challenge_question == self.challenge_question}.count > 1
         errors.add(:challenge_question, 'can only be used once')
       end
     end
 
     def challenge_answer_uniqueness
-      if  self.challenge_answer.present? && self.{resource}.{resource}_challenge_questions.select{|q| q.challenge_answer == self.challenge_answer}.count > 1
+      if  self.challenge_answer.present? && self.user.user_challenge_questions.select{|q| q.challenge_answer == self.challenge_answer}.count > 1
         errors.add(:challenge_answer, 'can only be used once')
       end
     end
@@ -115,7 +116,7 @@ Configuration settings
   # Max challenge question attempts
   config.max_challenge_question_attempts = 3
 
-  # Number of challenge questions to store for each {resource}
+  # Number of challenge questions to store for each user
   config.number_of_challenge_questions = 3
 
   # Default challenge question options
@@ -125,12 +126,16 @@ Configuration settings
 
 ### Customization
 
-By default challenge questions are enabled for each {resource}, you can change it with this method in your User model:
+By default challenge questions are enabled for each user, you can change it with this method in your User model:
 
 ```ruby
-  def need_challenge_questions?(request)
+  def login_challenge_questions?(request)
+    request.ip != '127.0.0.1'
+  end
+  
+  def set_challenge_questions?(request)
     request.ip != '127.0.0.1'
   end
 ```
 
-this will disable challenge questions for local {resource}s
+this will disable challenge questions for local users

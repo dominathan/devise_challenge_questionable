@@ -29,7 +29,7 @@ CONTENT
   belongs_to :#{class_name.underscore}
 
   validates :challenge_question, :challenge_answer, :presence => true
-  validates :challenge_answer, :length => { :in => 3..56 }, :format => {:with => /^[\\w\\s:]*$/, :message => "can not contain special characters"}, :allow_blank => true
+  validates :challenge_answer, :length => { :in => 3..56 }, :format => {:with => /^[\\w\\s:\/]*$/, :message => "can not contain special characters"}, :allow_blank => true
 
   # Must use custom validation since uniqueness scope will not work with has_many association
   validate :challenge_question_uniqueness
@@ -79,7 +79,8 @@ CONTENT
         inject_into_file path, :after => "devise:\n" do
 <<-CONTENT
     challenge_questions:
-      attempt_failed: "Attempt failed."
+      attempt_failed: "Attempt failed. Please try again."
+      max_attempts_reached: "You have reached the maximum attempts."
       updated_challenge_questions: "Successfully updated challenge questions."
       send_instructions: "You will receive an email with instructions about how to reset your challenge questions in a few minutes."
 CONTENT

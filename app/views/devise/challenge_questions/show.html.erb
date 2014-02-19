@@ -2,12 +2,15 @@
 
 <%= form_tag([:authenticate, resource_name, :challenge_question], :method => :put) do %>
   <fieldset>
-    <p>
-      <%= hidden_field_tag :challenge_question_id, @challenge_question.id%>
-      <%= label_tag :challege_question, @challenge_question.challenge_question %>
-      <br>
-      <%= password_field_tag :challenge_answer, nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => 'true', :autocomplete => "off" %>
-    </p>
+    <%= hidden_field_tag :limit, params[:limit]%>
+    <%- @challenge_questions.each_with_index do |cq, index| %>
+      <p>
+        <%= hidden_field_tag "challenge_questions[#{cq.id}][id]", cq.id%>
+        <%= label_tag "challenge_questions[#{cq.id}][challenge_question]", cq.challenge_question %>
+        <br>
+        <%= password_field_tag "challenge_questions[#{cq.id}][challenge_answer]", nil, :placeholder => 'Answer', :class => 'wide', :style => 'font-size: 1.8em;padding:5px', :autofocus => (true if index == 0), :autocomplete => "off" %>
+      </p>
+    <% end %>
     <p>
       <%= submit_tag "Submit", :style => 'font-size:1.8em;'%>
       or
