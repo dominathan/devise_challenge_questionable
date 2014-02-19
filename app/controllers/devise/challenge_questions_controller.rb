@@ -132,7 +132,7 @@ class Devise::ChallengeQuestionsController < ApplicationController
     
     def failed_attempts
       respond_to do |format|
-        format.html { redirect_to send("#{resource_name}_challenge_question_path", :limit => params[:limit] ) }
+        format.html { redirect_to send("#{resource_name}_challenge_question_path" ) }
         format.json { render :json => {:errors => I18n.t(:"#{resource_name}.#{:attempt_failed}", :resource_name => resource_name, :scope => [:devise, controller_name.to_sym], :default => :attempt_failed)} }
       end
     end
