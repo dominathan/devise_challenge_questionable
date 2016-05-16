@@ -1,5 +1,5 @@
-class Devise::ChallengeQuestionsController < ApplicationController
-  include Devise::Controllers::InternalHelpers
+class Devise::ChallengeQuestionsController < DeviseController
+
   prepend_before_filter :require_no_authentication, :only => [ :new, :create, :edit, :update, :max_challenge_question_attempts_reached ]
   prepend_before_filter :authenticate_scope!, :only => [:show, :authenticate, :manage, :forgot]
   before_filter :prepare_and_validate, :handle_challenge_questions, :only => [:show, :authenticate]
