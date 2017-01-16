@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency 'rails', '>= 3.0.20'
-  s.add_runtime_dependency 'devise', '>= 2.0.0.rc'
+  s.add_runtime_dependency 'devise', '>= 4.1.0'
 
   s.add_development_dependency 'bundler'
 end
