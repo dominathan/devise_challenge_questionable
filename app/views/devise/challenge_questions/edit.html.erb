@@ -39,26 +39,11 @@
 <% end %>
 
 <script type="text/javascript" language="javascript">
-  // if (window.jQuery) {
-  //   jQuery(document).ready(function() {
-  //     $("select").change(function () {
-  //       var $this = $(this);
-  //       var prevVal = $this.data("prev");
-  //       var otherSelects = $("select").not(this);
-  //       otherSelects.find('option:contains('+ $(this).val() +')').attr('disabled', 'disabled');
-  //       // if (prevVal) {
-  //           otherSelects.find('option:contains('+ prevVal +')').removeAttr('disabled');
-  //       // }
-  //       $this.data("prev", $this.val());
-  //     });
-  //
-  //     $("select").each(function () {
-  //       var $this = $(this);
-  //       var prevVal = $this.data("prev");
-  //       var otherSelects = $("select").not($this);
-  //       otherSelects.find('option:contains('+ $this.val() +')').attr('disabled', 'false');
-  //       $this.data("prev", $this.val());
-  //     });
-  //   });
-  // }
+  if (window.jQuery) {
+    $('select').on('change', function(e) {
+      var $this = $(this);
+      var otherSelects = $("select").not(this);
+      otherSelects.find('option:contains('+ $(this).val() +')').attr('disabled','disabled')
+    })
+  }
 </script>
