@@ -7,7 +7,7 @@
     <%= devise_error_messages! %>
     <%= f.hidden_field :id %>
     <%= f.hidden_field :reset_challenge_questions_token %>
-  
+
     <%= f.fields_for :"#{resource_name}_challenge_questions", resource.send("#{resource_name}_challenge_questions") do |cq| %>
       <% if cq.object.new_record? %>
         <p>
@@ -39,26 +39,26 @@
 <% end %>
 
 <script type="text/javascript" language="javascript">
-  if (window.jQuery) {
-    jQuery(document).ready(function() {
-      $("select").change(function () {
-        var $this = $(this);
-        var prevVal = $this.data("prev");
-        var otherSelects = $("select").not(this);
-        otherSelects.find('option:contains('+ $(this).val() +')').attr('disabled', 'disabled');
-        if (prevVal) {
-            otherSelects.find('option:contains('+ prevVal +')').removeAttr('disabled');
-        }  
-        $this.data("prev", $this.val());
-      });
-  
-      $("select").each(function () {
-        var $this = $(this);
-        var prevVal = $this.data("prev");
-        var otherSelects = $("select").not(this);
-        otherSelects.find('option:contains('+ $(this).val() +')').attr('disabled', 'disabled');  
-        $this.data("prev", $this.val());
-      });
-    });
-  }
+  // if (window.jQuery) {
+  //   jQuery(document).ready(function() {
+  //     $("select").change(function () {
+  //       var $this = $(this);
+  //       var prevVal = $this.data("prev");
+  //       var otherSelects = $("select").not(this);
+  //       otherSelects.find('option:contains('+ $(this).val() +')').attr('disabled', 'disabled');
+  //       // if (prevVal) {
+  //           otherSelects.find('option:contains('+ prevVal +')').removeAttr('disabled');
+  //       // }
+  //       $this.data("prev", $this.val());
+  //     });
+  //
+  //     $("select").each(function () {
+  //       var $this = $(this);
+  //       var prevVal = $this.data("prev");
+  //       var otherSelects = $("select").not($this);
+  //       otherSelects.find('option:contains('+ $this.val() +')').attr('disabled', 'false');
+  //       $this.data("prev", $this.val());
+  //     });
+  //   });
+  // }
 </script>
