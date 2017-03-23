@@ -68,12 +68,12 @@ class Devise::ChallengeQuestionsController < DeviseController
   def manage
     resource.set_reset_challenge_questions_token
     sign_out(resource)
-    redirect_to edit_challenge_question_path(resource, :reset_challenge_questions_token => resource.reset_challenge_questions_token)
+    redirect_to edit_user_challenge_question_path(resource, :reset_challenge_questions_token => resource.reset_challenge_questions_token)
   end
 
   def forgot
     sign_out(resource)
-    redirect_to new_challenge_question_path(resource_name)
+    redirect_to new_user_challenge_question_path(resource_name)
   end
 
   def max_challenge_question_attempts_reached
