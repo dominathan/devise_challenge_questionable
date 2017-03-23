@@ -6,7 +6,7 @@ class Devise::ChallengeQuestionsController < DeviseController
 
   # GET /resource/challenge_question/new
   def new
-    build_resource
+    resource_class.new
     render :new
   end
 
