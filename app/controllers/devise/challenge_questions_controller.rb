@@ -15,7 +15,7 @@ class Devise::ChallengeQuestionsController < DeviseController
     self.resource = resource_class.send_reset_challenge_questions_instructions(params[resource_name])
     if resource.errors.empty?
       set_flash_message :notice, :send_instructions
-      redirect_to new_session_path(resource_name)
+      redirect_to edit_user_registration_path
     else
       render :new
     end
@@ -35,7 +35,7 @@ class Devise::ChallengeQuestionsController < DeviseController
 
     if resource.errors.empty?
       set_flash_message :notice, :updated_challenge_questions
-      redirect_to :root
+      redirect_to edit_user_registration_path
     else
       render :edit
     end
