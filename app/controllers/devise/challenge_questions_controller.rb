@@ -95,7 +95,14 @@ class Devise::ChallengeQuestionsController < DeviseController
     end
 
     def challenge_questions_authenticated?
-      @challenge_questions.all?{|question| Digest::MD5.hexdigest(question[:challenge_answer].try(:downcase).to_s).eql?(question[:answer])}
+      @challenge_questions.all? do |question|
+        @user_hash = ::BCrypt::Password.new(question[:answer])
+        if ENV['PASSWORD_PEPPER']
+          @user_hash.is_password?(question[:challenge_answer].try(:downcase) + ENV['PASSWORD_PEPPER'])
+        else
+          @user_hash.is_password?(question[:challenge_answer].try(:downcase))
+        end
+      end
     end
 
     def build_challenge_questions

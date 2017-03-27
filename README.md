@@ -26,9 +26,9 @@ Once that's done, run:
 In order to add challenge questions to a model, run the command:
 
     bundle exec rails g devise_challenge_questionable MODEL
-    
+
     bundle exec rails g devise_challenge_questionable:install
-    
+
     bundle exec rails g devise_challenge_questionable:views users
 
 Where MODEL is your model name (e.g. User or Admin). This generator will add `:challenge_questionable` to your model
@@ -45,9 +45,9 @@ To manually enable challenge questions for the User model, you should add the fo
 ```ruby
   has_many :user_challenge_questions, :validate => true, :inverse_of => :user
   accepts_nested_attributes_for :user_challenge_questions, :allow_destroy => true
-  
+
   devise :challenge_questionable
-  
+
   attr_accessible :user_challenge_questions_attributes
 ```
 
@@ -68,9 +68,13 @@ You also need to add the `user_challenge_question.rb` Model.
     before_save :digest_challenge_answer
 
     def digest_challenge_answer
-      write_attribute(:challenge_answer, Digest::MD5.hexdigest(self.challenge_answer.downcase)) unless self.challenge_answer.nil?
+      if ENV['PASSWORD_PEPPER']
+        write_attribute(:challenge_answer, ::BCrypt::Password.create(self.challenge_answer.downcase + ENV['PASSWORD_PEPPER'], :cost => Devise.stretches)) unless self.challenge_answer.nil?
+      else
+        write_attribute(:challenge_answer, ::BCrypt::Password.create(self.challenge_answer.downcase, :cost => Devise.stretches)) unless self.challenge_answer.nil?
+      end
     end
-  
+
     private
     def challenge_question_uniqueness
       if self.challenge_question.present? && self.user.user_challenge_questions.select{|q| q.challenge_question == self.challenge_question}.count > 1
@@ -83,7 +87,7 @@ You also need to add the `user_challenge_question.rb` Model.
         errors.add(:challenge_answer, 'can only be used once')
       end
     end
-  
+
     def challenge_answer_repeating
       if self.challenge_answer.present? && self.challenge_answer =~ /(.)\1{2,}/
         errors.add(:challenge_answer, 'can not have more then two repeating characters in a row')
@@ -132,7 +136,7 @@ By default challenge questions are enabled for each user, you can change it with
   def login_challenge_questions?(request)
     request.ip != '127.0.0.1'
   end
-  
+
   def set_challenge_questions?(request)
     request.ip != '127.0.0.1'
   end
