@@ -12,7 +12,6 @@ class Devise::ChallengeQuestionsController < DeviseController
 
   # POST /resource/challenge_question
   def create
-    puts "THISA IS DIFFERENT"
     self.resource = resource_class.send_reset_challenge_questions_instructions(params[resource_name])
     if resource.errors.empty?
       set_flash_message :notice, :send_instructions
@@ -36,7 +35,7 @@ class Devise::ChallengeQuestionsController < DeviseController
 
     if resource.errors.empty?
       set_flash_message :notice, :updated_challenge_questions
-      redirect_to home_path
+      sign_in_and_redirect(resource)
     else
       render :edit
     end
